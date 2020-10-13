@@ -128,8 +128,13 @@ namespace TicTacToe
             int playerWinningMove = GetWinningMove(playerLetter);
             if (playerWinningMove != 0)
                 return playerWinningMove;
+            int[] cornerMoves = { 1, 3, 7, 9 };
+            for (int i = 0; i < cornerMoves.Length; i++)
+            {
+                if (isSpaceFree(i))
+                    return cornerMoves[i];
+            }
             return 0;
-
         }
         public int GetWinningMove(char computerLetter)
         {
@@ -139,9 +144,11 @@ namespace TicTacToe
                 {
                     MakeAMove(i, computerLetter);
                     if (CheckWinner(computerLetter))
-                        return i;
-                    else
+                    {
                         board[i] = ' ';
+                        return i;
+                    }
+                    board[i] = ' ';
                 }
             }
             return 0;
@@ -164,7 +171,6 @@ namespace TicTacToe
                     location = ticTacToe.MoveToLocation();
                     ticTacToe.MakeAMove(location, playerLetter);
                 }
-                
                 if (player == "COMPUTER")
                 {
                     location = ticTacToe.GetComputerMove(computerLetter,playerLetter);
@@ -176,7 +182,6 @@ namespace TicTacToe
                     Console.WriteLine(player + " Has Won");
                     break;
                 }
-                
                 if (ticTacToe.CheckDraw())
                 {
                     Console.WriteLine("It's a tie");
