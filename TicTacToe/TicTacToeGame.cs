@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace TicTacToe
 {
@@ -34,8 +35,26 @@ namespace TicTacToe
                 }
                 Console.Write(board[space] + "     |");
             }
+        }
 
-
+        public void GetUserMove(char letter)
+        {
+            Console.WriteLine("\nYour Turn: ");
+            int index = Convert.ToInt32(Console.ReadLine());
+            if(index<1 || index > 9)
+            {
+                Console.WriteLine("Oops! Please enter valid entry!");
+                GetUserMove(letter);
+            }
+            else if(board[index]==' ')
+            {
+                board[index] = letter;
+            }
+            else
+            {
+                Console.WriteLine("Oops! That's filled!");
+                GetUserMove(letter);
+            }
         }
         static void Main(string[] args)
         {
@@ -44,6 +63,7 @@ namespace TicTacToe
             ticTacToe.CreateBoard();
             char userLetter = ChooseUserLetter();
             ticTacToe.ShowBoard();
+            ticTacToe.GetUserMove(userLetter);
         }
     }
 }
