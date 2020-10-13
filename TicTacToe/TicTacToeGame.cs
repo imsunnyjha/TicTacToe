@@ -33,6 +33,12 @@ namespace TicTacToe
             ChooseUserLetter();
             return ' ';
         }
+        public char getComputerLetter(char playerLetter)
+        {
+            if (playerLetter == 'X')
+                return 'O';
+            return 'X';
+        }
         public void ShowBoard()
         {
             Console.WriteLine("  -------------------------");
@@ -114,18 +120,49 @@ namespace TicTacToe
             }
             return true;
         }
+        public int GetComputerMove(char computerLetter)
+        {
+            int winningMove = GetWinningMove(computerLetter);
+            return winningMove;
+        }
+        public int GetWinningMove(char computerLetter)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (isSpaceFree(i))
+                {
+                    MakeAMove(i, computerLetter);
+                    if (CheckWinner(computerLetter))
+                        return i;
+                    else
+                        board[i] = ' ';
+                }
+            }
+            return 0;
+        }
         static void Main(string[] args)
         {
+            int location = 0;
+
             Console.WriteLine("Welcome to Tic Tac Toe!");
             TicTacToeGame ticTacToe = new TicTacToeGame();
             ticTacToe.CreateBoard();
+            char playerLetter = ticTacToe.ChooseUserLetter();
+            char computerLetter = ticTacToe.getComputerLetter(playerLetter);
             string player = ticTacToe.PlayerStartingFirst();
             while (true)
             {
                 Console.WriteLine(player + " plays");
-                char playerLetter = ticTacToe.ChooseUserLetter();
-                int location = ticTacToe.MoveToLocation();
-                ticTacToe.MakeAMove(location, playerLetter);
+                if (player == "USER")
+                {
+                    location = ticTacToe.MoveToLocation();
+                    ticTacToe.MakeAMove(location, playerLetter);
+                }
+                if (player == "COMPUTER")
+                {
+                    location = ticTacToe.GetComputerMove(computerLetter);
+                    ticTacToe.MakeAMove(location, computerLetter);
+                }
                 ticTacToe.ShowBoard();
                 if (ticTacToe.CheckWinner(playerLetter) == true)
                 {
