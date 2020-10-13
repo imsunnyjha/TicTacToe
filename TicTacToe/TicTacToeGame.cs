@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Data.Common;
 
 namespace TicTacToe
 {
@@ -17,12 +18,17 @@ namespace TicTacToe
                 board[space] = ' ';
             }
         }
-        private static char ChooseUserLetter()
+        public char ChooseUserLetter()
         {
+            char choice;
             Console.WriteLine("Play as X or O : ");
-            string userLetter = Console.ReadLine();
-            Console.WriteLine("You are Player: " + char.ToUpper(userLetter[0]));
-            return char.ToUpper(userLetter[0]);
+            choice = Convert.ToChar(Console.ReadLine());
+            if (choice == 'X' || choice == 'O' || choice == 'x' || choice == 'o')
+            {
+                return choice;
+            }
+            ChooseUserLetter();
+            return ' ';
         }
         public void ShowBoard()
         {
@@ -37,33 +43,35 @@ namespace TicTacToe
             }
         }
 
-        public void GetUserMove(char letter)
+        public int GetUserMove()
         {
             Console.WriteLine("\nYour Turn: ");
             int index = Convert.ToInt32(Console.ReadLine());
             if(index<1 || index > 9)
             {
                 Console.WriteLine("Oops! Please enter valid entry!");
-                GetUserMove(letter);
+                GetUserMove();
             }
-            else if(board[index]==' ')
-            {
-                board[index] = letter;
-            }
-            else
+            if(board[index]!=' ')
             {
                 Console.WriteLine("Oops! That's filled!");
-                GetUserMove(letter);
+                GetUserMove();
             }
+            return index;
+        }
+        public void MakeAMove(int index,char choice)
+        {
+            board[index]=choice;
         }
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Tic Tac Toe!");
             TicTacToeGame ticTacToe = new TicTacToeGame();
             ticTacToe.CreateBoard();
-            char userLetter = ChooseUserLetter();
+            char playerLetter = ticTacToe.ChooseUserLetter();
             ticTacToe.ShowBoard();
-            ticTacToe.GetUserMove(userLetter);
+            int index = ticTacToe.GetUserMove();
+            ticTacToe.MakeAMove(index, playerLetter);
         }
     }
 }
