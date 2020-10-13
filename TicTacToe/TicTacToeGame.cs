@@ -104,12 +104,14 @@ namespace TicTacToe
         public bool CheckWinner(char playerLetter)
         {
             return ((board[1] == playerLetter && board[2] == playerLetter && board[3] == playerLetter) ||
-                    (board[1] == playerLetter && board[4] == playerLetter && board[7] == playerLetter) ||
-                    (board[1] == playerLetter && board[5] == playerLetter && board[9] == playerLetter) ||
-                    (board[3] == playerLetter && board[6] == playerLetter && board[9] == playerLetter) ||
-                    (board[3] == playerLetter && board[5] == playerLetter && board[7] == playerLetter) ||
-                    (board[7] == playerLetter && board[8] == playerLetter && board[9] == playerLetter)
-                   );
+                     (board[1] == playerLetter && board[4] == playerLetter && board[7] == playerLetter) ||
+                     (board[1] == playerLetter && board[5] == playerLetter && board[9] == playerLetter) ||
+                     (board[3] == playerLetter && board[6] == playerLetter && board[9] == playerLetter) ||
+                     (board[3] == playerLetter && board[5] == playerLetter && board[7] == playerLetter) ||
+                     (board[7] == playerLetter && board[8] == playerLetter && board[9] == playerLetter) ||
+                     (board[4] == playerLetter && board[5] == playerLetter && board[6] == playerLetter) ||
+                     (board[2] == playerLetter && board[5] == playerLetter && board[8] == playerLetter)
+                    );
         }
         public bool CheckDraw()
         {
@@ -161,10 +163,18 @@ namespace TicTacToe
             }
             return 0;
         }
+        public int getGameStatus(char letter)
+        {
+            if (CheckWinner(letter))
+                return 0;
+            if (CheckDraw())
+                return 1;
+            return 2;
+        }
         static void Main(string[] args)
         {
             int location = 0;
-
+            int status = 0;
             Console.WriteLine("Welcome to Tic Tac Toe!");
             TicTacToeGame ticTacToe = new TicTacToeGame();
             ticTacToe.CreateBoard();
@@ -178,19 +188,21 @@ namespace TicTacToe
                 {
                     location = ticTacToe.MoveToLocation();
                     ticTacToe.MakeAMove(location, playerLetter);
+                    status = ticTacToe.getGameStatus(playerLetter);
                 }
                 if (player == "COMPUTER")
                 {
                     location = ticTacToe.GetComputerMove(computerLetter,playerLetter);
                     ticTacToe.MakeAMove(location, computerLetter);
+                    status = ticTacToe.getGameStatus(computerLetter);
                 }
                 ticTacToe.ShowBoard();
-                if (ticTacToe.CheckWinner(playerLetter) == true)
+                if (status == 0)
                 {
-                    Console.WriteLine(player + " Has Won");
+                    Console.WriteLine(player + " Has Won The Game");
                     break;
                 }
-                if (ticTacToe.CheckDraw())
+                if (status == 1)
                 {
                     Console.WriteLine("It's a tie");
                     break;
