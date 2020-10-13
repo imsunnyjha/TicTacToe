@@ -35,38 +35,49 @@ namespace TicTacToe
         }
         public void ShowBoard()
         {
-            for (int space = 1; space < 10; space++)
-            {
-                if (space == 4 || space == 7)
-                {
-                    Console.WriteLine("\n");
-                    Console.WriteLine("    -------------------");
-                }
-                Console.Write(board[space] + "     |");
-            }
+            Console.WriteLine("  -------------------------");
+            Console.WriteLine("  |       |       |       |");
+            Console.WriteLine("  |   {0}   |   {1}   |   {2}   |", board[1], board[2], board[3]);
+            Console.WriteLine("  |       |       |       |");
+            Console.WriteLine("  -------------------------");
+            Console.WriteLine("  |       |       |       |");
+            Console.WriteLine("  |   {0}   |   {1}   |   {2}   |", board[4], board[5], board[6]);
+            Console.WriteLine("  |       |       |       |");
+            Console.WriteLine("  -------------------------");
+            Console.WriteLine("  |       |       |       |");
+            Console.WriteLine("  |   {0}   |   {1}   |   {2}   |", board[7], board[8], board[9]);
+            Console.WriteLine("  |       |       |       |");
+            Console.WriteLine("  -------------------------");
         }
 
-        public int GetUserMove()
+        public int MoveToLocation()
         {
-            Console.WriteLine("\nYour Turn: ");
-            int index = Convert.ToInt32(Console.ReadLine());
-            if(index<1 || index > 9)
+            Console.WriteLine("Enter Location index from 1 to 9");
+            int location = Convert.ToInt32(Console.ReadLine());
+            if (location < 1 || location > 9)
             {
-                Console.WriteLine("Oops! Please enter valid entry!");
-                GetUserMove();
+                Console.WriteLine("Not valid index");
+                MoveToLocation();
+
             }
-            if(board[index]!=' ')
+            if (isSpaceFree(location) == false)
             {
-                Console.WriteLine("Oops! That's filled!");
-                GetUserMove();
+                Console.WriteLine("Location already filled");
+                MoveToLocation();
             }
-            return index;
+            return location;
+
         }
-        public void MakeAMove(int index,char choice)
+        public bool isSpaceFree(int location)
         {
-            board[index]=choice;
+            return (board[location] == ' ');
+
         }
-        public string PlayerChance()
+        public void MakeAMove(int location,char letter)
+        {
+            board[location]=letter;
+        }
+        public string PlayerStartingFirst()
         {
             Random random = new Random();
             int toss = random.Next(0, 2);
@@ -76,16 +87,58 @@ namespace TicTacToe
             }
             return "COMPUTER";
         }
+        public string PlayerChance(string player)
+        {
+            if (player == "USER")
+            {
+                return "COMPUTER";
+            }
+            return "USER";
+        }
+        public bool CheckWinner(char playerLetter)
+        {
+            return ((board[1] == playerLetter && board[2] == playerLetter && board[3] == playerLetter) ||
+                    (board[1] == playerLetter && board[4] == playerLetter && board[7] == playerLetter) ||
+                    (board[1] == playerLetter && board[5] == playerLetter && board[9] == playerLetter) ||
+                    (board[3] == playerLetter && board[6] == playerLetter && board[9] == playerLetter) ||
+                    (board[3] == playerLetter && board[5] == playerLetter && board[7] == playerLetter) ||
+                    (board[7] == playerLetter && board[8] == playerLetter && board[9] == playerLetter)
+                   );
+        }
+        public bool CheckDraw()
+        {
+            for (int i = 0; i <= 9; i++)
+            {
+                if (isSpaceFree(i) == true)
+                    return false;
+            }
+            return true;
+        }
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Tic Tac Toe!");
             TicTacToeGame ticTacToe = new TicTacToeGame();
             ticTacToe.CreateBoard();
-            char playerLetter = ticTacToe.ChooseUserLetter();
-            ticTacToe.ShowBoard();
-            ticTacToe.PlayerChance();
-            int index = ticTacToe.GetUserMove();
-            ticTacToe.MakeAMove(index, playerLetter);
+            string player = ticTacToe.PlayerStartingFirst();
+            while (true)
+            {
+                Console.WriteLine(player + " plays");
+                char playerLetter = ticTacToe.ChooseUserLetter();
+                int location = ticTacToe.MoveToLocation();
+                ticTacToe.MakeAMove(location, playerLetter);
+                ticTacToe.ShowBoard();
+                if (ticTacToe.CheckWinner(playerLetter) == true)
+                {
+                    Console.WriteLine(player + " Has Won");
+                    break;
+                }
+                if (ticTacToe.CheckDraw())
+                {
+                    Console.WriteLine("It's a tie");
+                    break;
+                }
+                player = ticTacToe.PlayerChance(player);
+            }
         }
     }
 }
