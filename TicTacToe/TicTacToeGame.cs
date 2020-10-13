@@ -6,8 +6,8 @@ namespace TicTacToe
 {
     class TicTacToeGame
     {
-        public const int USER = 0;
-        public const int COMPUTER = 1;
+        public const int USER = 1;
+        public const int COMPUTER = 0;
 
         char[] board;
         public TicTacToeGame()
@@ -26,7 +26,7 @@ namespace TicTacToe
             char choice;
             Console.WriteLine("Play as X or O : ");
             choice = Convert.ToChar(Console.ReadLine());
-            if (choice == 'X' || choice == 'O' || choice == 'x' || choice == 'o')
+            if (choice == 'X' || choice == 'O')
             {
                 return choice;
             }
@@ -120,10 +120,16 @@ namespace TicTacToe
             }
             return true;
         }
-        public int GetComputerMove(char computerLetter)
+        public int GetComputerMove(char computerLetter, char playerLetter)
         {
             int winningMove = GetWinningMove(computerLetter);
-            return winningMove;
+            if (winningMove != 0)
+                return winningMove;
+            int playerWinningMove = GetWinningMove(playerLetter);
+            if (playerWinningMove != 0)
+                return playerWinningMove;
+            return 0;
+
         }
         public int GetWinningMove(char computerLetter)
         {
@@ -158,9 +164,10 @@ namespace TicTacToe
                     location = ticTacToe.MoveToLocation();
                     ticTacToe.MakeAMove(location, playerLetter);
                 }
+                
                 if (player == "COMPUTER")
                 {
-                    location = ticTacToe.GetComputerMove(computerLetter);
+                    location = ticTacToe.GetComputerMove(computerLetter,playerLetter);
                     ticTacToe.MakeAMove(location, computerLetter);
                 }
                 ticTacToe.ShowBoard();
@@ -169,6 +176,7 @@ namespace TicTacToe
                     Console.WriteLine(player + " Has Won");
                     break;
                 }
+                
                 if (ticTacToe.CheckDraw())
                 {
                     Console.WriteLine("It's a tie");
