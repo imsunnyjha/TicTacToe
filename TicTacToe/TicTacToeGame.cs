@@ -6,6 +6,9 @@ namespace TicTacToe
 {
     class TicTacToeGame
     {
+        public const int USER = 0;
+        public const int COMPUTER = 1;
+
         char[] board;
         public TicTacToeGame()
         {
@@ -63,6 +66,16 @@ namespace TicTacToe
         {
             board[index]=choice;
         }
+        public string PlayerChance()
+        {
+            Random random = new Random();
+            int toss = random.Next(0, 2);
+            if (toss == USER)
+            {
+                return "USER";
+            }
+            return "COMPUTER";
+        }
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Tic Tac Toe!");
@@ -70,6 +83,7 @@ namespace TicTacToe
             ticTacToe.CreateBoard();
             char playerLetter = ticTacToe.ChooseUserLetter();
             ticTacToe.ShowBoard();
+            ticTacToe.PlayerChance();
             int index = ticTacToe.GetUserMove();
             ticTacToe.MakeAMove(index, playerLetter);
         }
